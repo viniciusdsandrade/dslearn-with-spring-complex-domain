@@ -8,13 +8,12 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@NoArgsConstructor
 @Setter
 @Getter
+@NoArgsConstructor
 @Entity(name = "Enrollment")
 @Table(name = "tb_enrollment",
         schema = "db_dslearn")
@@ -23,8 +22,8 @@ public class Enrollment {
     @EmbeddedId
     private EnrollmentPK id = new EnrollmentPK();
 
-    private boolean available;
-    private boolean onlyUpdate;
+    private Boolean available;
+    private Boolean onlyUpdate;
 
     @CreationTimestamp
     private LocalDateTime enrollMoment;
@@ -39,7 +38,12 @@ public class Enrollment {
     @Setter(AccessLevel.NONE)
     private Set<Lesson> lessonsDone = new HashSet<>();
 
-    public Enrollment(User user, Offer offer, LocalDateTime enrollMoment, LocalDateTime refundMoment, boolean available, boolean onlyUpdate) {
+    public Enrollment(User user,
+                      Offer offer,
+                      LocalDateTime enrollMoment,
+                      LocalDateTime refundMoment,
+                      Boolean available,
+                      Boolean onlyUpdate) {
         id.setUser(user);
         id.setOffer(offer);
         this.enrollMoment = enrollMoment;
@@ -53,7 +57,7 @@ public class Enrollment {
         final int prime = 31;
         int hash = 1;
 
-        hash *= prime + ((id == null) ? 0 : id.hashCode());
+        hash *= prime + ((this.id == null) ? 0 : this.id.hashCode());
 
         if (hash < 0) hash *= -1;
 
@@ -67,19 +71,19 @@ public class Enrollment {
         if (obj == null) return false;
         if (this.getClass() != obj.getClass()) return false;
 
-        Enrollment other = (Enrollment) obj;
+        Enrollment that = (Enrollment) obj;
 
-        return Objects.equals(this.id, other.id);
+        return Objects.equals(this.id, that.id);
     }
 
     @Override
     public String toString() {
-        return "Enrollment{" +
-                "id=" + id +
-                ", enrollMoment=" + enrollMoment +
-                ", refundMoment=" + refundMoment +
-                ", available=" + available +
-                ", onlyUpdate=" + onlyUpdate +
-                '}';
+        return "{\n"
+                + "\"id\": " + this.id + ",\n"
+                + "\"enrollMoment\": \"" + this.enrollMoment + "\",\n"
+                + "\"refundMoment\": \"" + this.refundMoment + "\",\n"
+                + "\"available\": " + this.available + ",\n"
+                + "\"onlyUpdate\": " + this.onlyUpdate + "\n"
+                + "}";
     }
 }

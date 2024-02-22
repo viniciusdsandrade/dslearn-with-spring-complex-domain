@@ -43,7 +43,11 @@ public abstract class Lesson {
     @Setter(AccessLevel.NONE)
     private Set<Enrollment> enrollmentsDone = new HashSet<>();
 
-    public Lesson(Long id, String title, Integer position, Section section) {
+    public Lesson(Long id,
+                  String title,
+                  Integer position,
+                  Section section) {
+        super();
         this.id = id;
         this.title = title;
         this.position = position;
@@ -55,7 +59,7 @@ public abstract class Lesson {
         final int prime = 31;
         int hash = 1;
 
-        hash = prime * hash + ((id == null) ? 0 : id.hashCode());
+        hash = prime * hash + ((this.id == null) ? 0 : this.id.hashCode());
 
         if (hash < 0) hash *= -1;
 
@@ -69,18 +73,19 @@ public abstract class Lesson {
         if (obj == null) return false;
         if (this.getClass() != obj.getClass()) return false;
 
-        Lesson other = (Lesson) obj;
+        Lesson that = (Lesson) obj;
 
-        return Objects.equals(this.id, other.id);
+        return Objects.equals(this.id, that.id);
     }
 
     @Override
     public String toString() {
-        return "Lesson{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", position=" + position +
-                ", section=" + section +
-                '}';
+        return "{\n"
+                + "\"id\": " + this.id + ",\n"
+                + "\"title\": \"" + this.title + "\",\n"
+                + "\"position\": " + this.position + ",\n"
+                + "\"section\": " + this.section + "\n"
+                + "}";
     }
+
 }

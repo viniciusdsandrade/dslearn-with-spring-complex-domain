@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -27,11 +26,15 @@ public class Deliver {
     private String feedback;
     private Integer correctCount;
 
+    @Enumerated(EnumType.STRING)
+    private DeliverStatus status;
+
     @CreationTimestamp
     private LocalDateTime moment;
 
-    @Enumerated(EnumType.STRING)
-    private DeliverStatus status;
+    @ManyToOne
+    @JoinColumn(name = "lesson_id")
+    private Lesson lesson;
 
     @ManyToOne
     @JoinColumns({
@@ -40,16 +43,12 @@ public class Deliver {
     })
     private Enrollment enrollment;
 
-    @ManyToOne
-    @JoinColumn(name = "lesson_id")
-    private Lesson lesson;
-
     @Override
     public int hashCode() {
         final int prime = 31;
         int hash = 1;
 
-        hash *= prime + ((id == null) ? 0 : id.hashCode());
+        hash *= prime + ((this.id == null) ? 0 : this.id.hashCode());
 
         if (hash < 0) hash = -hash;
 
@@ -69,16 +68,16 @@ public class Deliver {
 
     @Override
     public String toString() {
-        return "Deliver{" +
-                "id=" + id +
-                ", uri='" + uri + '\'' +
-                ", moment=" + moment +
-                ", status=" + status +
-                ", feedback='" + feedback + '\'' +
-                ", correctCount=" + correctCount +
-                ", deliverStatus=" + status +
-                ", enrollment=" + enrollment +
-                ", lesson=" + lesson +
-                '}';
+        return "{\n" +
+                "  \"id\": " + this.id + ",\n" +
+                "  \"uri\": \"" + this.uri + "\",\n" +
+                "  \"moment\": \"" + this.moment + "\",\n" +
+                "  \"status\": " + this.status + ",\n" +
+                "  \"feedback\": \"" + this.feedback + "\",\n" +
+                "  \"correctCount\": " + this.correctCount + ",\n" +
+                "  \"deliverStatus\": " + this.status + ",\n" +
+                "  \"enrollment\": " + this.enrollment + ",\n" +
+                "  \"lesson\": " + this.lesson + "\n" +
+                "}";
     }
 }

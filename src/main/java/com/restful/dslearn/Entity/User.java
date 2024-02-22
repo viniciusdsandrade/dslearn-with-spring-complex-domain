@@ -38,7 +38,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Notification> notifications = new ArrayList<>();
 
-    public User(Long id, String name, String email, String password) {
+    public User(Long id,
+                String name,
+                String email,
+                String password) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -50,8 +53,8 @@ public class User {
         final int prime = 31;
         int hash = 1;
 
-        hash = prime * hash + ((id == null) ? 0 : id.hashCode());
-        hash = prime * hash + ((email == null) ? 0 : email.hashCode());
+        hash = prime * hash + ((this.id == null) ? 0 : this.id.hashCode());
+        hash = prime * hash + ((this.email == null) ? 0 : this.email.hashCode());
 
         if (hash < 0) hash *= -1;
 
@@ -60,6 +63,7 @@ public class User {
 
     @Override
     public boolean equals(Object obj) {
+
         if (this == obj) return true;
         if (obj == null) return false;
         if (this.getClass() != obj.getClass()) return false;
@@ -68,5 +72,17 @@ public class User {
 
         return this.id.equals(other.id) &&
                 this.email.equals(other.email);
+    }
+
+    @Override
+    public String toString() {
+        return "{\n" +
+                "  \"id\": " + this.id + ",\n" +
+                "  \"name\": \"" + this.name + "\",\n" +
+                "  \"email\": \"" + this.email + "\",\n" +
+                "  \"password\": \"" + this.password + "\",\n" +
+                "  \"roles\": " + this.roles + ",\n" +
+                "  \"notifications\": " + this.notifications + "\n" +
+                "}";
     }
 }

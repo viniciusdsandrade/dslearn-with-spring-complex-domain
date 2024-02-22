@@ -13,7 +13,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Setter
 @Getter
-@Entity
+@Entity(name = "Task")
 @Table(name = "tb_task",
         schema = "db_dslearn")
 public class Task extends Lesson {
@@ -45,26 +45,15 @@ public class Task extends Lesson {
     }
 
     @Override
-    public String toString() {
-        return "Task{" +
-                "description='" + description + '\'' +
-                ", questionCount=" + questionCount +
-                ", approvalCount=" + approvalCount +
-                ", weight=" + weight +
-                ", dueDate=" + dueDate +
-                '}';
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int hash = super.hashCode();
 
-        hash *= prime + ((description == null) ? 0 : description.hashCode());
-        hash *= prime + ((questionCount == null) ? 0 : questionCount.hashCode());
-        hash *= prime + ((approvalCount == null) ? 0 : approvalCount.hashCode());
-        hash *= prime + ((weight == null) ? 0 : weight.hashCode());
-        hash *= prime + ((dueDate == null) ? 0 : dueDate.hashCode());
+        hash *= prime + ((this.description == null) ? 0 : this.description.hashCode());
+        hash *= prime + ((this.questionCount == null) ? 0 : this.questionCount.hashCode());
+        hash *= prime + ((this.approvalCount == null) ? 0 : this.approvalCount.hashCode());
+        hash *= prime + ((this.weight == null) ? 0 : this.weight.hashCode());
+        hash *= prime + ((this.dueDate == null) ? 0 : this.dueDate.hashCode());
 
         if (hash < 0) hash *= -1;
 
@@ -79,10 +68,21 @@ public class Task extends Lesson {
 
         Task task = (Task) o;
 
-        return Objects.equals(description, task.description) &&
-                Objects.equals(questionCount, task.questionCount) &&
-                Objects.equals(approvalCount, task.approvalCount) &&
-                Objects.equals(weight, task.weight) &&
-                Objects.equals(dueDate, task.dueDate);
+        return Objects.equals(this.description, task.description) &&
+                Objects.equals(this.questionCount, task.questionCount) &&
+                Objects.equals(this.approvalCount, task.approvalCount) &&
+                Objects.equals(this.weight, task.weight) &&
+                Objects.equals(this.dueDate, task.dueDate);
+    }
+
+    @Override
+    public String toString() {
+        return "{\n"
+                + "\"description\": \"" + this.description + "\",\n"
+                + "\"questionCount\": " + this.questionCount + ",\n"
+                + "\"approvalCount\": " + this.approvalCount + ",\n"
+                + "\"weight\": " + this.weight + ",\n"
+                + "\"dueDate\": \"" + this.dueDate + "\"\n"
+                + "}";
     }
 }

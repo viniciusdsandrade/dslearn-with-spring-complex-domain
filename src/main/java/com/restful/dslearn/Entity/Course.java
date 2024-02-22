@@ -27,7 +27,10 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<Offer> offers = new ArrayList<>();
 
-    public Course(Long id, String name, String imgUri, String imgGrayUri) {
+    public Course(Long id,
+                  String name,
+                  String imgUri,
+                  String imgGrayUri) {
         this.id = id;
         this.name = name;
         this.imgUri = imgUri;
@@ -39,7 +42,7 @@ public class Course {
         final int prime = 31;
         int hash = 1;
 
-        hash *= prime + ((id == null) ? 0 : id.hashCode());
+        hash *= prime + ((this.id == null) ? 0 : this.id.hashCode());
 
         if (hash < 0) hash *= -1;
 
@@ -59,11 +62,11 @@ public class Course {
 
     @Override
     public String toString() {
-        return "Course{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", imgUri='" + imgUri + '\'' +
-                ", imgGrayUri='" + imgGrayUri + '\'' +
-                '}';
+        return "{\n" +
+                "  \"id\": " + this.id + ",\n" +
+                "  \"name\": \"" + this.name + "\",\n" +
+                "  \"imgUri\": \"" + this.imgUri + "\",\n" +
+                "  \"imgGrayUri\": \"" + this.imgGrayUri + "\"\n" +
+                "}";
     }
 }

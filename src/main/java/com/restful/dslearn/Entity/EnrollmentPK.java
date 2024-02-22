@@ -5,17 +5,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Setter
 @Getter
-@Embeddable
+@Setter
+@NoArgsConstructor
 @Table(name = "tb_enrollment",
         schema = "db_dslearn")
+@Embeddable
 public class EnrollmentPK implements Serializable {
 
     @Serial
@@ -29,13 +31,20 @@ public class EnrollmentPK implements Serializable {
     @JoinColumn(name = "offer_id")
     private Offer offer;
 
+    public EnrollmentPK(User user, Offer offer) {
+        super();
+        this.user = user;
+        this.offer = offer;
+    }
+
+
     @Override
     public int hashCode() {
         final int prime = 31;
         int hash = 1;
 
-        hash *= prime + ((user == null) ? 0 : user.hashCode());
-        hash *= prime + ((offer == null) ? 0 : offer.hashCode());
+        hash *= prime + ((this.user == null) ? 0 : this.user.hashCode());
+        hash *= prime + ((this.offer == null) ? 0 : this.offer.hashCode());
 
         if (hash < 0) hash *= -1;
 
@@ -48,17 +57,17 @@ public class EnrollmentPK implements Serializable {
         if (obj == null) return false;
         if (this.getClass() != obj.getClass()) return false;
 
-        EnrollmentPK other = (EnrollmentPK) obj;
+        EnrollmentPK that = (EnrollmentPK) obj;
 
-        return Objects.equals(this.user, other.user) &&
-                Objects.equals(this.offer, other.offer);
+        return Objects.equals(this.user, that.user) &&
+                Objects.equals(this.offer, that.offer);
     }
 
     @Override
     public String toString() {
-        return "EnrollmentPK{" +
-                "user=" + user +
-                ", offer=" + offer +
-                '}';
+        return "{\n"
+                + "\"user\": " + this.user + ",\n"
+                + "\"offer\": " + this.offer + "\n"
+                + "}";
     }
 }

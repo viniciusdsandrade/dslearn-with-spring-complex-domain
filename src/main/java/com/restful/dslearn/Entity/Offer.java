@@ -14,7 +14,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity(name = "Offer")
-@Table(name = "offer",
+@Table(name = "tb_offer",
         schema = "db_dslearn")
 public class Offer {
 
@@ -36,7 +36,18 @@ public class Offer {
     @OneToMany(mappedBy = "offer")
     private List<Resource> resources = new ArrayList<>();
 
-
+    public Offer(Long id,
+                 String edition,
+                 Instant startMoment,
+                 Instant endMoment,
+                 Course course) {
+        super();
+        this.id = id;
+        this.edition = edition;
+        this.startMoment = startMoment;
+        this.endMoment = endMoment;
+        this.course = course;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -45,9 +56,9 @@ public class Offer {
         if (o == null) return false;
         if (this.getClass() != o.getClass()) return false;
 
-        Offer offer = (Offer) o;
+        Offer that = (Offer) o;
 
-        return Objects.equals(this.id, offer.id);
+        return Objects.equals(this.id, that.id);
     }
 
     @Override
@@ -64,9 +75,9 @@ public class Offer {
 
     @Override
     public String toString() {
-        return "Offer{" +
-                "id=" + id +
-                ", course=" + course +
-                '}';
+        return "{\n"
+                + "\"id\": " + this.id + ",\n"
+                + "\"course\": " + this.course + "\n"
+                + "}";
     }
 }

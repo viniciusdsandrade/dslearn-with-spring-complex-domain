@@ -20,7 +20,6 @@ public class Section {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String title;
     private String description;
     private Integer position;
@@ -51,7 +50,7 @@ public class Section {
         final int prime = 31;
         int hash = 1;
 
-        hash *= prime + ((id == null) ? 0 : id.hashCode());
+        hash *= prime + ((this.id == null) ? 0 : this.id.hashCode());
 
         if (hash < 0) hash *= -1;
 
@@ -60,12 +59,12 @@ public class Section {
 
     @Override
     public String toString() {
-        return "Section{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", position=" + position +
-                ", imgUri='" + imgUri + '\'' +
-                '}';
+        return "{\n"
+                + "\"id\": " + this.id + ",\n"
+                + "\"title\": \"" + this.title + "\",\n"
+                + "\"description\": \"" + this.description + "\",\n"
+                + "\"position\": " + this.position + ",\n"
+                + "\"imgUri\": \"" + this.imgUri + "\"\n"
+                + "}";
     }
 }

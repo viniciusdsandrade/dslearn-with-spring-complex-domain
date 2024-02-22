@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -45,19 +44,24 @@ public class Topic {
     @JoinColumn(name = "reply_id")
     private Reply answer;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tb_topics_likes",
-            joinColumns = @JoinColumn(name = "topic_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    @Setter(lombok.AccessLevel.NONE)
-    private Set<User> likes = new HashSet<>();
-
     @OneToMany(mappedBy = "topic")
     private List<Reply> replies = new ArrayList<>();
 
-    public Topic(Long id, String title, String body, LocalDateTime moment, User author, Offer offer, Lesson lesson, Reply answer) {
+    @ManyToMany
+    @JoinTable(name = "tb_topics_likes",
+            joinColumns = @JoinColumn(name = "topic_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @Setter(lombok.AccessLevel.NONE)
+    private Set<User> likes = new HashSet<>();
+
+
+    public Topic(Long id,
+                 String title,
+                 String body,
+                 LocalDateTime moment,
+                 User author,
+                 Offer offer,
+                 Lesson lesson) {
         this.id = id;
         this.title = title;
         this.body = body;
@@ -65,7 +69,6 @@ public class Topic {
         this.author = author;
         this.offer = offer;
         this.lesson = lesson;
-        this.answer = answer;
     }
 
     @Override
@@ -83,7 +86,7 @@ public class Topic {
     @Override
     public int hashCode() {
         final int prime = 31;
-        int hash = 7;
+        int hash = 1;
 
         hash *= prime + ((this.id == null) ? 0 : this.id.hashCode());
 
@@ -92,17 +95,17 @@ public class Topic {
 
     @Override
     public String toString() {
-        return "Topic{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", body='" + body + '\'' +
-                ", moment=" + moment +
-                ", author=" + author +
-                ", offer=" + offer +
-                ", lesson=" + lesson +
-                ", answer=" + answer +
-                ", likes=" + likes +
-                ", replies=" + replies +
-                '}';
+        return "{\n"
+                + "\"id\": " + this.id + ",\n"
+                + "\"title\": \"" + this.title + "\",\n"
+                + "\"body\": \"" + this.body + "\",\n"
+                + "\"moment\": \"" + this.moment + "\",\n"
+                + "\"author\": " + this.author + ",\n"
+                + "\"offer\": " + this.offer + ",\n"
+                + "\"lesson\": " + this.lesson + ",\n"
+                + "\"answer\": " + this.answer + ",\n"
+                + "\"likes\": " + this.likes + ",\n"
+                + "\"replies\": " + this.replies + "\n"
+                + "}";
     }
 }

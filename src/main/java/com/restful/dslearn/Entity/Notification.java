@@ -7,16 +7,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "Notification")
-@Table(name = "notification",
+@Table(name = "tb_notification",
         schema = "db_dslearn")
 public class Notification {
 
@@ -39,7 +38,7 @@ public class Notification {
         final int prime = 31;
         int hash = 1;
 
-        hash *= prime + ((id == null) ? 0 : id.hashCode());
+        hash *= prime + ((this.id == null) ? 0 : this.id.hashCode());
 
         if (hash < 0) hash *= -1;
 
@@ -52,20 +51,20 @@ public class Notification {
         if (o == null) return false;
         if (this.getClass() != o.getClass()) return false;
 
-        Notification notification = (Notification) o;
+        Notification that = (Notification) o;
 
-        return Objects.equals(this.id, notification.id);
+        return Objects.equals(this.id, that.id);
     }
 
     @Override
     public String toString() {
-        return "Notification{" +
-                "id=" + id +
-                ", text='" + text + '\'' +
-                ", moment=" + moment +
-                ", read=" + reading +
-                ", route='" + route + '\'' +
-                ", user=" + user +
-                '}';
+        return "{\n" +
+                "  \"id\": " + this.id + ",\n" +
+                "  \"text\": \"" + this.text + "\",\n" +
+                "  \"moment\": \"" + this.moment + "\",\n" +
+                "  \"reading\": " + this.reading + ",\n" +
+                "  \"route\": \"" + this.route + "\",\n" +
+                "  \"user\": " + this.user + "\n" +
+                "}";
     }
 }
