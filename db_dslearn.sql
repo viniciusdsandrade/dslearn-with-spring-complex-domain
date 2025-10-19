@@ -2,274 +2,214 @@ DROP DATABASE IF EXISTS db_dslearn;
 CREATE DATABASE db_dslearn;
 USE db_dslearn;
 
-SELECT DATABASE() AS BANCO_DE_DADOS_EM_USO;
+CREATE SCHEMA IF NOT EXISTS `db_dslearn`
+    DEFAULT CHARACTER SET utf8mb4
+    COLLATE utf8mb4_0900_ai_ci;
+USE `db_dslearn`;
 
-SELECT * FROM tb_content;
-SELECT * FROM tb_course;
-SELECT * FROM tb_role;
-SELECT * FROM tb_user;
-SELECT * FROM tb_user_role;
-SELECT * FROM tb_offer;
-SELECT * FROM tb_notification;
-SELECT * FROM tb_task;
-SELECT * FROM tb_enrollment;
-SELECT * FROM tb_resource;
-SELECT * FROM tb_resource_seq;
-SELECT * FROM tb_section;
-SELECT * FROM tb_lesson;
-SELECT * FROM tb_lessons_done;
-SELECT * FROM tb_deliver;
-SELECT * FROM tb_reply;
-SELECT * FROM tb_replies_likes;
-SELECT * FROM tb_topic;
-SELECT * FROM tb_topics_likes;
-
-CREATE TABLE IF NOT EXISTS tb_content
+CREATE TABLE `tb_user`
 (
-    id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    text      VARCHAR(255)    NULL,
-    video_uri VARCHAR(255)    NULL,
-
-    PRIMARY KEY (id)
+    `id`       BIGINT       NOT NULL AUTO_INCREMENT,
+    `name`     VARCHAR(255) NOT NULL,
+    `email`    VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `tb_user_email_unique` UNIQUE (`email`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_course
+CREATE TABLE `tb_role`
 (
-    id           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    name         VARCHAR(255),
-    img_gray_uri VARCHAR(255),
-    img_uri      VARCHAR(255),
-
-    PRIMARY KEY (id)
+    `id`        BIGINT       NOT NULL AUTO_INCREMENT,
+    `authority` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_user
+CREATE TABLE `tb_user_role`
 (
-    id       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    email    VARCHAR(255),
-    name     VARCHAR(255),
-    password VARCHAR(255),
-
-    UNIQUE (email),
-
-    PRIMARY KEY (id)
+    `user_id` BIGINT NOT NULL,
+    `role_id` BIGINT NOT NULL,
+    PRIMARY KEY (`user_id`, `role_id`),
+    CONSTRAINT `fk_user_role_user` FOREIGN KEY (`user_id`) REFERENCES `tb_user` (`id`),
+    CONSTRAINT `fk_user_role_role` FOREIGN KEY (`role_id`) REFERENCES `tb_role` (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_role
+CREATE TABLE `tb_course`
 (
-    id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    authority VARCHAR(255)    NOT NULL,
-
-    PRIMARY KEY (id)
+    `id`           BIGINT       NOT NULL AUTO_INCREMENT,
+    `name`         VARCHAR(255) NOT NULL,
+    `img_uri`      VARCHAR(255),
+    `img_gray_uri` VARCHAR(255),
+    PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_user_role
+CREATE TABLE `tb_offer`
 (
-    user_id BIGINT UNSIGNED NOT NULL,
-    role_id BIGINT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (user_id, role_id),
-
-    FOREIGN KEY (user_id) REFERENCES tb_user (id),
-    FOREIGN KEY (role_id) REFERENCES tb_role (id)
+    `id`           BIGINT       NOT NULL AUTO_INCREMENT,
+    `edition`      VARCHAR(255),
+    `start_moment` TIMESTAMP(6) NULL,
+    `end_moment`   TIMESTAMP(6) NULL,
+    `course_id`    BIGINT,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_offer_course` FOREIGN KEY (`course_id`) REFERENCES `tb_course` (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_offer
+CREATE TABLE `tb_resource`
 (
-    id           BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    edition      VARCHAR(255)    NULL,
-    end_moment   TIMESTAMP       NULL,
-    start_moment TIMESTAMP       NULL,
-    course_id    BIGINT UNSIGNED NULL,
-
-    PRIMARY KEY (id),
-
-    FOREIGN KEY (course_id) REFERENCES tb_course (id)
+    `id`          BIGINT NOT NULL AUTO_INCREMENT,
+    `title`       VARCHAR(255),
+    `description` VARCHAR(255),
+    `position`    INT,
+    `img_uri`     VARCHAR(255),
+    `type`        VARCHAR(32),
+    `offer_id`    BIGINT,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_resource_offer` FOREIGN KEY (`offer_id`) REFERENCES `tb_offer` (`id`),
+    CONSTRAINT `chk_resource_type` CHECK (`type` IN ('LESSON_ONLY', 'LESSON_TASK', 'FORUM', 'EXTERNAL_LINK'))
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_notification
+CREATE TABLE `tb_section`
 (
-    id      BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    moment  TIMESTAMP       NULL,
-    reading BIT             NULL,
-    route   VARCHAR(255)    NULL,
-    text    VARCHAR(255)    NULL,
-    user_id BIGINT UNSIGNED NULL,
-
-    PRIMARY KEY (id),
-
-    FOREIGN KEY (user_id) REFERENCES tb_user (id)
+    `id`              BIGINT NOT NULL AUTO_INCREMENT,
+    `title`           VARCHAR(255),
+    `description`     VARCHAR(255),
+    `position`        INT,
+    `img_uri`         VARCHAR(255),
+    `resource_id`     BIGINT,
+    `prerequisite_id` BIGINT,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_section_resource` FOREIGN KEY (`resource_id`) REFERENCES `tb_resource` (`id`),
+    CONSTRAINT `fk_section_prerequisite` FOREIGN KEY (`prerequisite_id`) REFERENCES `tb_section` (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_task
+CREATE TABLE `tb_lesson`
 (
-    id             BIGINT UNSIGNED AUTO_INCREMENT,
-    approval_count INTEGER   NULL,
-    description    VARCHAR(255),
-    due_date       TIMESTAMP NULL,
-    question_count INTEGER   NULL,
-    weight         FLOAT(53) NULL,
-
-    PRIMARY KEY (id)
+    `id`         BIGINT NOT NULL AUTO_INCREMENT,
+    `title`      VARCHAR(255),
+    `position`   INT,
+    `section_id` BIGINT,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_lesson_section` FOREIGN KEY (`section_id`) REFERENCES `tb_section` (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_enrollment
+CREATE TABLE `tb_content`
 (
-    available     BIT             NOT NULL,
-    only_update   BIT             NOT NULL,
-    enroll_moment TIMESTAMP       NULL,
-    refund_moment TIMESTAMP       NULL,
-
-    offer_id      BIGINT UNSIGNED NOT NULL,
-    user_id       BIGINT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (offer_id, user_id),
-
-    FOREIGN KEY (offer_id) REFERENCES tb_offer (id),
-    FOREIGN KEY (user_id) REFERENCES tb_user (id)
+    `id`        BIGINT NOT NULL,
+    `text`      TEXT,
+    `video_uri` VARCHAR(255),
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_content_lesson` FOREIGN KEY (`id`) REFERENCES `tb_lesson` (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_resource
+CREATE TABLE `tb_task`
 (
-    id          BIGINT UNSIGNED AUTO_INCREMENT,
-    title       VARCHAR(255)    NULL,
-    position    INTEGER         NULL,
-    description VARCHAR(255)    NULL,
-    img_uri     VARCHAR(255)    NULL,
-    link        VARCHAR(255)    NULL,
-
-    offer_id    BIGINT UNSIGNED NOT NULL,
-    type        ENUM (
-        'LESSON_ONLY',
-        'LESSON_TASK',
-        'FORUM',
-        'EXTERNAL_LINK')        NOT NULL,
-
-    PRIMARY KEY (id),
-
-    FOREIGN KEY (offer_id) REFERENCES tb_offer (id)
+    `id`             BIGINT       NOT NULL,
+    `description`    VARCHAR(255),
+    `question_count` INT,
+    `approval_count` INT,
+    `weight`         DOUBLE,
+    `due_date`       TIMESTAMP(6) NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_task_lesson` FOREIGN KEY (`id`) REFERENCES `tb_lesson` (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_resource_seq
+CREATE TABLE `tb_enrollment`
 (
-    next_val BIGINT UNSIGNED NOT NULL
-) ENGINE = InnoDB;
-INSERT INTO tb_resource_seq
-VALUE (1);
-
-CREATE TABLE IF NOT EXISTS tb_section
-(
-    id              BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    title           VARCHAR(255)    NULL,
-    description     VARCHAR(255)    NULL,
-    position        INTEGER         NULL,
-    img_uri         VARCHAR(255)    NULL,
-    resource_id     BIGINT UNSIGNED NOT NULL,
-    prerequisite_id BIGINT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (id),
-
-    FOREIGN KEY (prerequisite_id) REFERENCES tb_section (id),
-    FOREIGN KEY (resource_id) REFERENCES tb_resource (id)
+    `user_id`       BIGINT   NOT NULL,
+    `offer_id`      BIGINT   NOT NULL,
+    `available`     BOOLEAN,
+    `only_update`   BOOLEAN,
+    `enroll_moment` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `refund_moment` DATETIME NULL     DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`user_id`, `offer_id`),
+    CONSTRAINT `fk_enrollment_user` FOREIGN KEY (`user_id`) REFERENCES `tb_user` (`id`),
+    CONSTRAINT `fk_enrollment_offer` FOREIGN KEY (`offer_id`) REFERENCES `tb_offer` (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_lesson
+CREATE TABLE `tb_lessons_done`
 (
-    id         BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    position   INTEGER         NULL,
-    title      VARCHAR(255)    NULL,
-    section_id BIGINT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (id),
-
-    FOREIGN KEY (section_id) REFERENCES tb_section (id)
+    `lesson_id` BIGINT NOT NULL,
+    `user_id`   BIGINT NOT NULL,
+    `offer_id`  BIGINT NOT NULL,
+    PRIMARY KEY (`lesson_id`, `user_id`, `offer_id`),
+    CONSTRAINT `fk_lessons_done_lesson` FOREIGN KEY (`lesson_id`) REFERENCES `tb_lesson` (`id`),
+    CONSTRAINT `fk_lessons_done_enrollment` FOREIGN KEY (`user_id`, `offer_id`) REFERENCES `tb_enrollment` (`user_id`, `offer_id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_lessons_done
+CREATE TABLE `tb_notification`
 (
-    lesson_id BIGINT UNSIGNED NOT NULL,
-    user_id   BIGINT UNSIGNED NOT NULL,
-    offer_id  BIGINT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (lesson_id, user_id, offer_id),
-
-
-    FOREIGN KEY (lesson_id) REFERENCES tb_lesson (id),
-    FOREIGN KEY (user_id, offer_id) REFERENCES tb_enrollment (user_id, offer_id)
+    `id`      BIGINT   NOT NULL AUTO_INCREMENT,
+    `text`    VARCHAR(255),
+    `moment`  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `reading` BOOLEAN,
+    `route`   VARCHAR(255),
+    `user_id` BIGINT,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_notification_user` FOREIGN KEY (`user_id`) REFERENCES `tb_user` (`id`)
 ) ENGINE = InnoDB;
 
-
-CREATE TABLE IF NOT EXISTS tb_deliver
+CREATE TABLE `tb_topic`
 (
-    id            BIGINT UNSIGNED                        NOT NULL AUTO_INCREMENT,
-    correct_count integer                                NULL,
-    feedback      VARCHAR(255)                           NULL,
-    moment        TIMESTAMP                              NULL,
-    status        ENUM ('PENDING','ACCEPTED','REJECTED') NOT NULL,
-    uri           VARCHAR(255)                           NULL,
-    user_id       BIGINT UNSIGNED                        NULL,
-    offer_id      BIGINT UNSIGNED                        NULL,
-    lesson_id     BIGINT UNSIGNED                        NULL,
-
-    PRIMARY KEY (id),
-
-    FOREIGN KEY (lesson_id) REFERENCES tb_lesson (id),
-    FOREIGN KEY (user_id, offer_id) REFERENCES tb_enrollment (offer_id, user_id)
+    `id`        BIGINT   NOT NULL AUTO_INCREMENT,
+    `title`     VARCHAR(255),
+    `body`      TEXT,
+    `moment`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `author_id` BIGINT,
+    `offer_id`  BIGINT,
+    `lesson_id` BIGINT,
+    `reply_id`  BIGINT, -- FK adicionada após criar tb_reply (ciclo)
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_topic_author` FOREIGN KEY (`author_id`) REFERENCES `tb_user` (`id`),
+    CONSTRAINT `fk_topic_offer` FOREIGN KEY (`offer_id`) REFERENCES `tb_offer` (`id`),
+    CONSTRAINT `fk_topic_lesson` FOREIGN KEY (`lesson_id`) REFERENCES `tb_lesson` (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_reply
+CREATE TABLE `tb_reply`
 (
-    id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    body      TEXT            NULL,
-    moment    TIMESTAMP       NULL,
-    author_id BIGINT UNSIGNED NOT NULL,
-    topic_id  BIGINT UNSIGNED NOT NULL, -- FOREIGN KEY (topic_id) REFERENCES tb_topic (id);
-
-    PRIMARY KEY (id),
-    FOREIGN KEY (author_id) REFERENCES tb_user (id)
-
+    `id`        BIGINT   NOT NULL AUTO_INCREMENT,
+    `body`      TEXT,
+    `moment`    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `topic_id`  BIGINT,
+    `author_id` BIGINT,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_reply_topic` FOREIGN KEY (`topic_id`) REFERENCES `tb_topic` (`id`),
+    CONSTRAINT `fk_reply_author` FOREIGN KEY (`author_id`) REFERENCES `tb_user` (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_topic
+ALTER TABLE `tb_topic`
+    ADD CONSTRAINT `fk_topic_answer`
+        FOREIGN KEY (`reply_id`) REFERENCES `tb_reply` (`id`);
+
+CREATE TABLE `tb_replies_likes`
 (
-    id        BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    body      TEXT            NULL,
-    moment    TIMESTAMP       NULL,
-    title     VARCHAR(255)    NULL,
-    reply_id  BIGINT UNSIGNED NOT NULL,
-    author_id BIGINT UNSIGNED NOT NULL,
-    lesson_id BIGINT UNSIGNED NOT NULL,
-    offer_id  BIGINT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (id),
-
-    FOREIGN KEY (reply_id) REFERENCES tb_reply (id),
-    FOREIGN KEY (author_id) REFERENCES tb_user (id),
-    FOREIGN KEY (lesson_id) REFERENCES tb_lesson (id),
-    FOREIGN KEY (offer_id) REFERENCES tb_offer (id)
+    `reply_id` BIGINT NOT NULL,
+    `user_id`  BIGINT NOT NULL,
+    PRIMARY KEY (`reply_id`, `user_id`),
+    CONSTRAINT `fk_replies_likes_reply` FOREIGN KEY (`reply_id`) REFERENCES `tb_reply` (`id`),
+    CONSTRAINT `fk_replies_likes_user` FOREIGN KEY (`user_id`) REFERENCES `tb_user` (`id`)
 ) ENGINE = InnoDB;
 
-ALTER TABLE tb_reply
-    ADD CONSTRAINT FK_TB_REPLY_ON_TOPIC FOREIGN KEY (topic_id) REFERENCES tb_topic (id);
-
-CREATE TABLE IF NOT EXISTS tb_topics_likes
+CREATE TABLE `tb_topics_likes`
 (
-    topic_id BIGINT UNSIGNED NOT NULL,
-    user_id  BIGINT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (topic_id, user_id),
-
-    FOREIGN KEY (topic_id) REFERENCES tb_topic (id),
-    FOREIGN KEY (user_id) REFERENCES tb_user (id)
+    `topic_id` BIGINT NOT NULL,
+    `user_id`  BIGINT NOT NULL,
+    PRIMARY KEY (`topic_id`, `user_id`),
+    CONSTRAINT `fk_topics_likes_topic` FOREIGN KEY (`topic_id`) REFERENCES `tb_topic` (`id`),
+    CONSTRAINT `fk_topics_likes_user` FOREIGN KEY (`user_id`) REFERENCES `tb_user` (`id`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS tb_replies_likes
+CREATE TABLE `tb_deliver`
 (
-    reply_id BIGINT UNSIGNED NOT NULL,
-    user_id  BIGINT UNSIGNED NOT NULL,
-
-    PRIMARY KEY (reply_id, user_id),
-
-    FOREIGN KEY (reply_id) REFERENCES tb_reply (id),
-    FOREIGN KEY (user_id) REFERENCES tb_user (id)
+    `id`            BIGINT   NOT NULL AUTO_INCREMENT,
+    `uri`           VARCHAR(255),
+    `feedback`      VARCHAR(255),
+    `correct_count` INT,
+    `status`        VARCHAR(32),
+    `moment`        DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `lesson_id`     BIGINT,
+    `user_id`       BIGINT,
+    `offer_id`      BIGINT,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_deliver_lesson` FOREIGN KEY (`lesson_id`) REFERENCES `tb_lesson` (`id`),
+    CONSTRAINT `fk_deliver_enrollment` FOREIGN KEY (`user_id`, `offer_id`) REFERENCES `tb_enrollment` (`user_id`, `offer_id`),
+    CONSTRAINT `chk_deliver_status` CHECK (`status` IN ('PENDING', 'ACCEPTED', 'REJECTED'))
 ) ENGINE = InnoDB;
