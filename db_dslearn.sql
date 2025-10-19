@@ -213,3 +213,4 @@ CREATE TABLE `tb_deliver`
     CONSTRAINT `fk_deliver_enrollment` FOREIGN KEY (`user_id`, `offer_id`) REFERENCES `tb_enrollment` (`user_id`, `offer_id`),
     CONSTRAINT `chk_deliver_status` CHECK (`status` IN ('PENDING', 'ACCEPTED', 'REJECTED'))
 ) ENGINE = InnoDB;
+
