@@ -1,4 +1,4 @@
-package com.restful.dslearn.Entity;
+package com.restful.dslearn.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -44,7 +44,7 @@ public abstract class Lesson {
                     @JoinColumn(name = "offer_id", referencedColumnName = "offer_id")
             }
     )
-    @Setter(AccessLevel.NONE)
+    @Setter(NONE)
     private Set<Enrollment> enrollmentsDone = new HashSet<>();
 
     public Lesson(

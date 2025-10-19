@@ -1,4 +1,4 @@
-package com.restful.dslearn.Entity;
+package com.restful.dslearn.entity;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
@@ -28,10 +28,4 @@ public class EnrollmentPK implements Serializable {
     @ManyToOne
     @JoinColumn(name = "offer_id")
     private Offer offer;
-
-    public EnrollmentPK(User user, Offer offer) {
-        super();
-        this.user = user;
-        this.offer = offer;
-    }
 }

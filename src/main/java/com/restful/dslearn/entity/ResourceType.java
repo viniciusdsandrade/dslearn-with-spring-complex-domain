@@ -1,4 +1,4 @@
-package com.restful.dslearn.Entity;
+package com.restful.dslearn.entity;
 
 public enum ResourceType {
     LESSON_ONLY,

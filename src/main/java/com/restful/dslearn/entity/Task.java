@@ -1,4 +1,4 @@
-package com.restful.dslearn.Entity;
+package com.restful.dslearn.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
