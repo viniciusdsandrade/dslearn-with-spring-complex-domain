@@ -25,7 +25,7 @@ import static lombok.AccessLevel.NONE;
 public class Topic {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
 
@@ -55,11 +55,9 @@ public class Topic {
     private List<Reply> replies = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(
-            name = "tb_topics_likes",
+    @JoinTable(name = "tb_topics_likes",
             joinColumns = @JoinColumn(name = "topic_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    @Setter(NONE)
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @Setter(lombok.AccessLevel.NONE)
     private Set<User> likes = new HashSet<>();
 }

@@ -27,19 +27,17 @@ import static lombok.AccessLevel.NONE;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String email;
     private String password;
 
-    @Setter(NONE)
-    @ManyToMany(fetch = EAGER)
-    @JoinTable(
-            name = "tb_user_role",
+    @Setter(AccessLevel.NONE)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "tb_user_role",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user")

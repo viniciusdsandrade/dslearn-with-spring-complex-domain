@@ -21,7 +21,7 @@ import static lombok.AccessLevel.NONE;
 public class Reply {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(columnDefinition = "TEXT")
@@ -31,7 +31,7 @@ public class Reply {
     private LocalDateTime moment;
 
     @OneToMany(mappedBy = "answer")
-    @Setter(NONE)
+    @Setter(AccessLevel.NONE)
     private Set<Topic> topics = new HashSet<>();
 
     @ManyToOne
@@ -43,11 +43,9 @@ public class Reply {
     private User author;
 
     @ManyToMany
-    @JoinTable(
-            name = "tb_replies_likes",
+    @JoinTable(name = "tb_replies_likes",
             joinColumns = @JoinColumn(name = "reply_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    @Setter(NONE)
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @Setter(AccessLevel.NONE)
     private Set<User> likes = new HashSet<>();
 }

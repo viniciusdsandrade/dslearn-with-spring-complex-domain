@@ -40,11 +40,11 @@ public abstract class Lesson {
             name = "tb_lessons_done",
             joinColumns = @JoinColumn(name = "lesson_id"),
             inverseJoinColumns = {
-                    @JoinColumn(name = "user_id",  referencedColumnName = "user_id"),
-                    @JoinColumn(name = "offer_id", referencedColumnName = "offer_id")
+                    @JoinColumn(name = "user_id"),
+                    @JoinColumn(name = "offer_id")
             }
     )
-    @Setter(NONE)
+    @Setter(AccessLevel.NONE)
     private Set<Enrollment> enrollmentsDone = new HashSet<>();
 
     public Lesson(

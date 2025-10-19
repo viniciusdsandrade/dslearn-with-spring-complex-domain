@@ -36,14 +36,7 @@ public class Enrollment {
     @OneToMany(mappedBy = "enrollment")
     private List<Deliver> deliveries = new ArrayList<>();
 
-    @JoinTable(
-            name = "tb_lessons_done",
-            joinColumns = @JoinColumn(name = "lesson_id"),
-            inverseJoinColumns = {
-                    @JoinColumn(name = "offer_id", referencedColumnName = "offer_id"),
-                    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-            }
-    )
+    @ManyToMany(mappedBy = "enrollmentsDone")
     @Setter(NONE)
-    private Set<Enrollment> enrollmentsDone = new HashSet<>();
+    private Set<Lesson> lessonsDone = new HashSet<>();
 }

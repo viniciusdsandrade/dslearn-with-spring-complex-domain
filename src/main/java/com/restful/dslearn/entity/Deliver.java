@@ -6,6 +6,9 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
+import static jakarta.persistence.EnumType.STRING;
+import static jakarta.persistence.GenerationType.IDENTITY;
+
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,13 +20,13 @@ import java.time.LocalDateTime;
 public class Deliver {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String uri;
     private String feedback;
     private Integer correctCount;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private DeliverStatus status;
 
     @CreationTimestamp
@@ -35,8 +38,8 @@ public class Deliver {
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "user_id",  referencedColumnName = "user_id"),
-            @JoinColumn(name = "offer_id", referencedColumnName = "offer_id")
+            @JoinColumn(name = "user_id"),
+            @JoinColumn(name = "offer_id")
     })
     private Enrollment enrollment;
 }
