@@ -1,19 +1,16 @@
 package com.restful.dslearn.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
+@EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity(name = "Deliver")
 @Table(name = "tb_deliver",
         schema = "db_dslearn")
@@ -38,46 +35,8 @@ public class Deliver {
 
     @ManyToOne
     @JoinColumns({
-            @JoinColumn(name = "user_id"),
-            @JoinColumn(name = "offer_id")
+            @JoinColumn(name = "user_id",  referencedColumnName = "user_id"),
+            @JoinColumn(name = "offer_id", referencedColumnName = "offer_id")
     })
     private Enrollment enrollment;
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int hash = 1;
-
-        hash *= prime + ((this.id == null) ? 0 : this.id.hashCode());
-
-        if (hash < 0) hash = -hash;
-
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (this.getClass() != obj.getClass()) return false;
-
-        Deliver other = (Deliver) obj;
-
-        return Objects.equals(this.id, other.id);
-    }
-
-    @Override
-    public String toString() {
-        return "{\n" +
-                "  \"id\": " + this.id + ",\n" +
-                "  \"uri\": \"" + this.uri + "\",\n" +
-                "  \"moment\": \"" + this.moment + "\",\n" +
-                "  \"status\": " + this.status + ",\n" +
-                "  \"feedback\": \"" + this.feedback + "\",\n" +
-                "  \"correctCount\": " + this.correctCount + ",\n" +
-                "  \"deliverStatus\": " + this.status + ",\n" +
-                "  \"enrollment\": " + this.enrollment + ",\n" +
-                "  \"lesson\": " + this.lesson + "\n" +
-                "}";
-    }
 }

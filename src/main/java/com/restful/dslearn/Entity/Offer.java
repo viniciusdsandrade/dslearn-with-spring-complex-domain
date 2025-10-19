@@ -1,6 +1,7 @@
 package com.restful.dslearn.Entity;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,8 +9,10 @@ import lombok.Setter;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @Getter
 @Setter
@@ -19,7 +22,7 @@ import java.util.Objects;
 public class Offer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String edition;
 
@@ -36,48 +39,18 @@ public class Offer {
     @OneToMany(mappedBy = "offer")
     private List<Resource> resources = new ArrayList<>();
 
-    public Offer(Long id,
-                 String edition,
-                 Instant startMoment,
-                 Instant endMoment,
-                 Course course) {
+    public Offer(
+            Long id,
+            String edition,
+            Instant startMoment,
+            Instant endMoment,
+            Course course
+    ) {
         super();
         this.id = id;
         this.edition = edition;
         this.startMoment = startMoment;
         this.endMoment = endMoment;
         this.course = course;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-
-        if (this == o) return true;
-        if (o == null) return false;
-        if (this.getClass() != o.getClass()) return false;
-
-        Offer that = (Offer) o;
-
-        return Objects.equals(this.id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int hash = 1;
-
-        hash *= prime + ((id == null) ? 0 : id.hashCode());
-
-        if (hash < 0) hash *= -1;
-
-        return hash;
-    }
-
-    @Override
-    public String toString() {
-        return "{\n"
-                + "\"id\": " + this.id + ",\n"
-                + "\"course\": " + this.course + "\n"
-                + "}";
     }
 }

@@ -156,7 +156,7 @@ CREATE TABLE `tb_topic`
     `author_id` BIGINT,
     `offer_id`  BIGINT,
     `lesson_id` BIGINT,
-    `reply_id`  BIGINT, -- FK adicionada após criar tb_reply (ciclo)
+    `reply_id`  BIGINT,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_topic_author` FOREIGN KEY (`author_id`) REFERENCES `tb_user` (`id`),
     CONSTRAINT `fk_topic_offer` FOREIGN KEY (`offer_id`) REFERENCES `tb_offer` (`id`),
@@ -213,4 +213,3 @@ CREATE TABLE `tb_deliver`
     CONSTRAINT `fk_deliver_enrollment` FOREIGN KEY (`user_id`, `offer_id`) REFERENCES `tb_enrollment` (`user_id`, `offer_id`),
     CONSTRAINT `chk_deliver_status` CHECK (`status` IN ('PENDING', 'ACCEPTED', 'REJECTED'))
 ) ENGINE = InnoDB;
-

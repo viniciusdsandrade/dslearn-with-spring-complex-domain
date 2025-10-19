@@ -1,27 +1,27 @@
 package com.restful.dslearn.Entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
+import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.NONE;
+
+@EqualsAndHashCode(callSuper = false)
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity(name = "Reply")
 @Table(name = "tb_reply",
         schema = "db_dslearn")
 public class Reply {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(columnDefinition = "TEXT")
@@ -31,7 +31,7 @@ public class Reply {
     private LocalDateTime moment;
 
     @OneToMany(mappedBy = "answer")
-    @Setter(AccessLevel.NONE)
+    @Setter(NONE)
     private Set<Topic> topics = new HashSet<>();
 
     @ManyToOne
@@ -43,44 +43,11 @@ public class Reply {
     private User author;
 
     @ManyToMany
-    @JoinTable(name = "tb_replies_likes",
+    @JoinTable(
+            name = "tb_replies_likes",
             joinColumns = @JoinColumn(name = "reply_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @Setter(AccessLevel.NONE)
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @Setter(NONE)
     private Set<User> likes = new HashSet<>();
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int hash = 1;
-
-        hash *= prime + ((this.id == null) ? 0 : this.id.hashCode());
-
-        if (hash < 0) hash = -hash;
-
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (this.getClass() != obj.getClass()) return false;
-
-        Reply that = (Reply) obj;
-
-        return Objects.equals(this.id, that.id);
-    }
-
-    @Override
-    public String toString() {
-        return "{\n"
-                + "\"id\": " + this.id + ",\n"
-                + "\"body\": \"" + this.body + "\",\n"
-                + "\"moment\": \"" + this.moment + "\",\n"
-                + "\"topic\": " + this.topic + ",\n"
-                + "\"author\": " + this.author + ",\n"
-                + "\"likes\": " + this.likes + "\n"
-                + "}";
-    }
 }
