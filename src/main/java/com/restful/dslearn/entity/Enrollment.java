@@ -17,10 +17,7 @@ import static lombok.AccessLevel.NONE;
 @Getter
 @NoArgsConstructor
 @Entity(name = "Enrollment")
-@Table(
-        name = "tb_enrollment",
-        schema = "db_dslearn"
-)
+@Table(name = "tb_enrollment")
 public class Enrollment {
 
     @EmbeddedId

@@ -17,10 +17,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @Entity(name = "Role")
-@Table(
-        name = "tb_role",
-        schema = "db_dslearn"
-)
+@Table(name = "tb_role")
 public class Role {
 
     @Id

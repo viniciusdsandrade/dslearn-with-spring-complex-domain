@@ -19,8 +19,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @Entity(name = "Reply")
-@Table(name = "tb_reply",
-        schema = "db_dslearn")
+@Table(name = "tb_reply")
 public class Reply {
 
     @Id
@@ -78,5 +77,6 @@ public class Reply {
     public final int hashCode() {
         return this instanceof HibernateProxy
                 ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
-                : getClass().hashCode();    }
+                : getClass().hashCode();
+    }
 }

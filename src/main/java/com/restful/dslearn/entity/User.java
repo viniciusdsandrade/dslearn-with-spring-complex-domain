@@ -16,11 +16,13 @@ import static lombok.AccessLevel.NONE;
 @Getter
 @Setter
 @Entity(name = "User")
-@Table(name = "tb_user",
-        schema = "db_dslearn",
+@Table(
+        name = "tb_user",
         uniqueConstraints = {
-                @UniqueConstraint(name = "tb_user_email_unique",
-                        columnNames = "email")
+                @UniqueConstraint(
+                        name = "tb_user_email_unique",
+                        columnNames = "email"
+                )
         }
 )
 public class User {

@@ -15,10 +15,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity(name = "Content")
-@Table(
-        name = "tb_content",
-        schema = "db_dslearn"
-)
+@Table(name = "tb_content")
 public class Content extends Lesson {
 
     private String text;
@@ -48,5 +45,6 @@ public class Content extends Lesson {
     public final int hashCode() {
         return this instanceof HibernateProxy
                 ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
-                : getClass().hashCode();    }
+                : getClass().hashCode();
+    }
 }

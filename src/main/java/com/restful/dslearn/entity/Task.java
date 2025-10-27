@@ -15,10 +15,7 @@ import java.util.Objects;
 @Setter
 @Getter
 @Entity(name = "Task")
-@Table(
-        name = "tb_task",
-        schema = "db_dslearn"
-)
+@Table(name = "tb_task")
 public class Task extends Lesson {
 
     private String description;

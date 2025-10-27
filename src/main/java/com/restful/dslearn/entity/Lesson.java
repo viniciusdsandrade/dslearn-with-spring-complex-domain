@@ -17,10 +17,7 @@ import static lombok.AccessLevel.NONE;
 @Setter
 @NoArgsConstructor
 @Entity(name = "Lesson")
-@Table(
-        name = "tb_lesson",
-        schema = "db_dslearn"
-)
+@Table(name = "tb_lesson")
 @Inheritance(strategy = JOINED)
 public abstract class Lesson {
 

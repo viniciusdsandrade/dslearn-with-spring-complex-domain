@@ -17,10 +17,7 @@ import static lombok.AccessLevel.NONE;
 @Getter
 @Setter
 @Entity(name = "Topic")
-@Table(
-        name = "tb_topic",
-        schema = "db_dslearn"
-)
+@Table(name = "tb_topic")
 public class Topic {
 
     @Id

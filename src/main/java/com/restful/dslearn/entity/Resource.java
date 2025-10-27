@@ -16,10 +16,7 @@ import static jakarta.persistence.EnumType.STRING;
 @Getter
 @Setter
 @Entity(name = "Resource")
-@Table(
-        name = "tb_resource",
-        schema = "db_dslearn"
-)
+@Table(name = "tb_resource")
 public class Resource {
 
     @Id
