@@ -1,11 +1,11 @@
 package com.restful.dslearn.entity;
 
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -13,7 +13,6 @@ import java.util.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.NONE;
 
-@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @Getter
 @Setter
@@ -25,7 +24,7 @@ import static lombok.AccessLevel.NONE;
 public class Topic {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String title;
 
@@ -55,9 +54,37 @@ public class Topic {
     private List<Reply> replies = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "tb_topics_likes",
+    @JoinTable(
+            name = "tb_topics_likes",
             joinColumns = @JoinColumn(name = "topic_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    @Setter(lombok.AccessLevel.NONE)
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @Setter(NONE)
     private Set<User> likes = new HashSet<>();
+
+    @Override
+    public final boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+
+        Class<?> oEffectiveClass = obj instanceof HibernateProxy
+                ? ((HibernateProxy) obj).getHibernateLazyInitializer().getPersistentClass()
+                : obj.getClass();
+
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy
+                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
+                : this.getClass();
+
+        if (thisEffectiveClass != oEffectiveClass) return false;
+
+        Topic topic = (Topic) obj;
+
+        return getId() != null && Objects.equals(getId(), topic.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy
+                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
+                : getClass().hashCode();    }
 }
