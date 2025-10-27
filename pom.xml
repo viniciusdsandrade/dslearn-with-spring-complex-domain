@@ -14,6 +14,7 @@
     <name>dslearn</name>
     <properties>
         <java.version>25</java.version>
+        <logback.version>1.5.19</logback.version>
     </properties>
     <dependencies>
         <dependency>
