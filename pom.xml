@@ -14,18 +14,9 @@
     <name>dslearn</name>
     <properties>
         <java.version>25</java.version>
-        <maven.compiler.release>${java.specification.version}</maven.compiler.release>
+        <maven.compiler.release>25</maven.compiler.release>
         <logback.version>1.5.19</logback.version>
     </properties>
-
-    <profiles>
-        <profile>
-            <id>java25</id>
-            <properties>
-                <maven.compiler.release>25</maven.compiler.release>
-            </properties>
-        </profile>
-    </profiles>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -79,6 +70,29 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce-java-25</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireJavaVersion>
+                                    <version>[25,25]</version>
+                                    <message>
+                                        This project requires Java 25. Set JAVA_HOME / PATH to JDK 25 and rerun Maven.
+                                    </message>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
