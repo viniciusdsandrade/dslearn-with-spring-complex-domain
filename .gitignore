@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Test reports (generated) ###
+docs/tests/jacoco/
+docs/tests/mutation/
+
+### AI tools ###
+.codex

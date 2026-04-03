@@ -44,7 +44,7 @@ public class UserService {
         user.setName(request.name());
         user.setEmail(request.email());
         user.setPassword(request.password());
-        user.setRoles(new java.util.HashSet<>(roles));
+        user.getRoles().addAll(roles);
         return toDTO(userRepository.save(user));
     }
 
@@ -56,7 +56,8 @@ public class UserService {
         user.setName(request.name());
         user.setEmail(request.email());
         user.setPassword(request.password());
-        user.setRoles(new java.util.HashSet<>(roles));
+        user.getRoles().clear();
+        user.getRoles().addAll(roles);
         return toDTO(user);
     }
 
