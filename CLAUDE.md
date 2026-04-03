@@ -34,13 +34,14 @@ H2 console available at `/h2-console` when using profile `h2` (default).
 
 ## Database Profiles
 
-| Profile   | DB         | Seed file              |
-|-----------|------------|------------------------|
-| `h2`      | H2 mem     | `import.sql`           |
-| `desktop` | MySQL 3307 | `import-mysql.sql`     |
-| `laptop`  | MySQL 3306 | `import-mysql.sql`     |
+| Profile   | DB         | Seed file          |
+|-----------|------------|--------------------|
+| `h2`      | H2 mem     | `import.sql`       |
+| `desktop` | MySQL 3307 | `import-mysql.sql` |
+| `laptop`  | MySQL 3306 | `import-mysql.sql` |
 
-Desktop/laptop profiles have commented-out PostgreSQL config that can be toggled. Active profile is set in `application.properties` (`spring.profiles.active`).
+Desktop/laptop profiles have commented-out PostgreSQL config that can be toggled. Active profile is set in
+`application.properties` (`spring.profiles.active`).
 
 ## Domain Architecture
 
@@ -57,13 +58,15 @@ Course 1──* Offer 1──* Resource 1──* Section 1──* Lesson
                                         (prerequisite) └── Task (questions, weight, dueDate)
 ```
 
-- **Lesson** is `abstract` with `@Inheritance(strategy = JOINED)` — subclasses `Content` and `Task` each map to their own table sharing the `tb_lesson` PK.
+- **Lesson** is `abstract` with `@Inheritance(strategy = JOINED)` — subclasses `Content` and `Task` each map to their
+  own table sharing the `tb_lesson` PK.
 - **Section** has a self-referencing `@ManyToOne prerequisite` for ordering dependencies.
 - **Resource** has an `@Enumerated(STRING) type` field: `LESSON_ONLY`, `LESSON_TASK`, `FORUM`, `EXTERNAL_LINK`.
 
 ### Enrollment (Composite Key)
 
 `Enrollment` uses `@EmbeddedId` with `EnrollmentPK(User, Offer)`. Other entities reference this composite key:
+
 - `Deliver` joins on both `user_id` + `offer_id` via `@JoinColumns`
 - `tb_lessons_done` is a join table between `Lesson` and `Enrollment` (composite FK)
 
@@ -80,7 +83,8 @@ Topic *──* User (likes)  Reply *──* User (likes)
 ### Supporting Entities
 
 - **Notification**: belongs to User, has `reading` (boolean) and `route` (frontend path)
-- **Deliver**: task submission linked to a Lesson and an Enrollment, with `DeliverStatus` enum (`PENDING`, `ACCEPTED`, `REJECTED`)
+- **Deliver**: task submission linked to a Lesson and an Enrollment, with `DeliverStatus` enum (`PENDING`, `ACCEPTED`,
+  `REJECTED`)
 - **Role**: authority string, many-to-many with User (`EAGER` fetch)
 
 ## Conventions
@@ -88,5 +92,6 @@ Topic *──* User (likes)  Reply *──* User (likes)
 - Table names: `tb_` prefix (e.g., `tb_user`, `tb_course`)
 - All entities implement HibernateProxy-aware `equals()`/`hashCode()` comparing by `id`
 - Collection setters disabled via `@Setter(AccessLevel.NONE)` — modify collections through the getter
-- Timestamps: `Instant` for date-only fields, `LocalDateTime` with `@CreationTimestamp`/`@UpdateTimestamp` for audit fields
+- Timestamps: `Instant` for date-only fields, `LocalDateTime` with `@CreationTimestamp`/`@UpdateTimestamp` for audit
+  fields
 - Jackson configured for `yyyy-MM-dd HH:mm:ss` format, timezone `America/Sao_Paulo`
