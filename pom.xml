@@ -14,9 +14,18 @@
     <name>dslearn</name>
     <properties>
         <java.version>25</java.version>
-        <maven.compiler.release>25</maven.compiler.release>
+        <maven.compiler.release>${java.specification.version}</maven.compiler.release>
         <logback.version>1.5.19</logback.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>java25</id>
+            <properties>
+                <maven.compiler.release>25</maven.compiler.release>
+            </properties>
+        </profile>
+    </profiles>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
